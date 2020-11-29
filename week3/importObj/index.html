@@ -1,0 +1,67 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Babylon + OpenPose Test</title>
+    <script src="https://cdn.babylonjs.com/babylon.max.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <button onclick="openFullscreen();">Open Video in Fullscreen Mode</button>
+    <script>
+        const setUp =  () => {
+            const canvas = document.getElementById('canvas');
+            const engine = new BABYLON.Engine(canvas, true);
+            const createScene =  function () {
+                const scene = new BABYLON.Scene(engine);
+                scene.clearColor = new BABYLON.Color3(0.65, 0.81, 0.67);
+
+                //camera
+                const camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 3, -10), scene);
+                camera.setTarget(BABYLON.Vector3.Zero());
+                camera.attachControl(canvas, true);
+
+                //Lichtinval
+                var light = new BABYLON.PointLight("light", new BABYLON.Vector3(0, 0, -3), scene);
+                light.intensity = .3;
+
+
+                // add gltf model to the scene
+                BABYLON.SceneLoader.Append("scenes/", "puppetOriented2.gltf", scene, function (scene) {
+               
+                // Create a default arc rotate camera and light.
+                scene.createDefaultCameraOrLight(true, true, true);
+                });
+
+                return scene;
+            }
+    
+            const scene = createScene();
+            engine.runRenderLoop(function () {
+                scene.render();
+            });
+        }
+
+        var elem = document.getElementById("canvas");
+
+        /* When the openFullscreen() function is executed, open the video in fullscreen.
+        Note that we must include prefixes for different browsers, as they don't support the requestFullscreen method yet */
+        function openFullscreen() {
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { /* Safari */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE11 */
+                elem.msRequestFullscreen();
+            }
+        }
+
+
+        window.addEventListener('DOMContentLoaded', setUp());
+    </script>
+
+</body>
+</html>
+
