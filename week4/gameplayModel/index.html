@@ -17,6 +17,7 @@
         const spawnrate2 = 3000;
         const spawnLineZ = 40;
         let player;
+        let playerBox;
         let box;
 
         const randomPosition = (box) => {
@@ -44,7 +45,6 @@
            
             //random obstakel selecteren
             let randomNumber = Math.random();
-            let box;
             
 
             if (randomNumber < 0.25) {
@@ -80,7 +80,6 @@
                 
                 console.log("3");
 
-
                 moveForward(box);
             }
             else if (randomNumber >= 0.75) {
@@ -106,7 +105,7 @@
                     
                     if (timePassed > 10000) clearInterval(timer);
                     box.position.z -= 1;
-                    checkCollisions(box);
+                    checkCollisions(box, playerBox);
                     // console.log(timePassed);
                 }, 100); 
             };
@@ -117,14 +116,13 @@
             console.log(spawnrate1, spawnrate2);
         }
         
-        const checkCollisions = (box) => {
-            // console.log(box);
-            // console.log(player);
-            if (box.intersectsMesh(player, false)) {
+        const checkCollisions = (box, playerBox) => {
+            console.log("test");
+            if (box.intersectsMesh(playerBox, false)) {
                console.log("boem");
             }
         }    
-
+        
         const setUp = () => {
         const canvas = document.getElementById('canvas');
 
@@ -149,27 +147,12 @@
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
                 
             // model
-            // BABYLON.SceneLoader.ImportMesh("","./models/","testModel.babylon", scene, function(newMeshes){ 
-            //     player = newMeshes[0];
-            //     player.position = new BABYLON.Vector3(0,1,-4);
-            //     player.scaling = new BABYLON.Vector3(1,1,1);
-            //     return player;
-            // });  
-            // if (player.intersectsMesh(box, false)) {
-            //    console.log("boem");
-            // }
             BABYLON.SceneLoader.OnPluginActivatedObservable.addOnce(function (plugin) {
             plugin.animationStartMode = BABYLON.GLTFLoaderAnimationStartMode.ALL;
             });   
 
             BABYLON.SceneLoader.ImportMesh("","./models/","bodyTest.glb", scene, function(newMeshes){ 
-                // player = [Linkerbeen, Rechterbeen, Body, Linkeroog, Rechteroog];
-                // Linkerbeen = newMeshes[0];
-                // Rechterbeen = newMeshes[1];
-                // Body = newMeshes[2];
-                // Linkeroog = newMeshes[3];
-                // Rechteroog = newMeshes[4];
-               
+                playerBox = newMeshes[1];
                 console.log(newMeshes);
                 player = new BABYLON.TransformNode();
 
@@ -184,7 +167,6 @@
                 return player;
                 });
             });
-            console.log(player);
 
             // ground
             const ground = BABYLON.MeshBuilder.CreateGround("ground", {height: 150, width: 9, subdivisions: 4});
