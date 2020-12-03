@@ -13,8 +13,11 @@
     <button id = "fsButton">Fullscreen</button>
     <p id = "demo"></p>
     <script>
-        const spawnRate = 1500;
+        const spawnrate1 = 1500;
+        const spawnrate2 = 3000;
         const spawnLineZ = 40;
+        let dirk;
+        let box;
 
         const randomPosition = (box) => {
             let randomNumberX = Math.random();
@@ -103,17 +106,25 @@
                     
                     if (timePassed > 10000) clearInterval(timer);
                     box.position.z -= 1;
+                    checkCollisions(box);
                     // console.log(timePassed);
                 }, 100); 
             };
         
         const spawnRandomObstacles = ( ) => {
-            setInterval(spawnRandomObstacle,  Math.random()*5000);
-            setInterval(spawnRandomObstacle,  Math.random()*4000);
+            setInterval(spawnRandomObstacle,  spawnrate1);
+            setInterval(spawnRandomObstacle,  spawnrate2);
+            console.log(spawnrate1, spawnrate2);
         }
         
-        spawnRandomObstacles();
-        
+        const checkCollisions = (box) => {
+            // console.log(box);
+            // console.log(dirk);
+            if (box.intersectsMesh(dirk, false)) {
+               console.log("boem");
+            }
+        }    
+
         const setUp = () => {
         const canvas = document.getElementById('canvas');
 
@@ -136,30 +147,19 @@
 
             // light
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+                
+            // model
+            BABYLON.SceneLoader.ImportMesh("","./models/","testModel.babylon", scene, function(newMeshes){ 
+                dirk = newMeshes[0];
+                dirk.position = new BABYLON.Vector3(0,1,-4);
+                dirk.scaling = new BABYLON.Vector3(1,1,1);
+                return dirk;
+            });  
+            // if (dirk.intersectsMesh(box, false)) {
+            //    console.log("boem");
+            // }
 
-            // box
-            // const cil = BABYLON.Mesh.CreateCylinder(0,0,0);
-            // cil.position = new BABYLON.Vector3(0,1,0);
-            // cil.scaling = new BABYLON.Vector3(3,3,3);
 
-            // const box = BABYLON.MeshBuilder.CreateBox("box", {}); //unit cube
-            // box.scaling = new BABYLON.Vector3(2, 1.5, 3);
-
-            
-            
-
-
-            //model Dirk toevoegen
-            // const dirk = BABYLON.SceneLoader.Append("models/", "dirkDiri.gltf", scene, function (dirk) {
-            //     dirk.meshes[0].position = new BABYLON.Vector3.Zero();
-            //     dirk.meshes[0].scaling = new BABYLON.Vector3(.2,.2, .2);
-            // });
-            
-
-            //obstakels
-            
-            
-            
             // ground
             const ground = BABYLON.MeshBuilder.CreateGround("ground", {height: 150, width: 9, subdivisions: 4});
             ground.position = new BABYLON.Vector3(0,0,7);
@@ -175,24 +175,23 @@
                         switch (kbInfo.event.key) {
                             case "w":
                             case "W" : 
-                                box.position.x -= 3;
+                                dirk.position.x -= 3;
                             break;
                             case "x":
                             case "X":
-                                box.position.x += 3;
+                                dirk.position.x += 3;
                             break;
                         }
                     break;
                 }
             })
-
+            spawnRandomObstacles();
             return scene;
         }
 
         const scene = createScene();
         engine.runRenderLoop(function () {
             scene.render();
-            
 
         });
     }
