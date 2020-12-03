@@ -27,7 +27,6 @@
             scene.clearColor = new BABYLON.Color3(0.65, 0.81, 0.67);
 
             // Camera
-
             // position of the camera
             var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 5, -10), scene);
 
@@ -39,19 +38,63 @@
 
             // light
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
-                
+            
+            BABYLON.SceneLoader.OnPluginActivatedObservable.addOnce(function (plugin) {
+            plugin.animationStartMode = BABYLON.GLTFLoaderAnimationStartMode.ALL;
+            });   
+
+
+
+
             // model
-            BABYLON.SceneLoader.ImportMesh("","./models/","dirkSimple.babylon", scene, function(newMeshes){ 
-                dirk = newMeshes;
+
+
+            BABYLON.SceneLoader.ImportMesh("","./models/","bodyTest.glb", scene, function(newMeshes){ 
+                // dirk = [Linkerbeen, Rechterbeen, Body, Linkeroog, Rechteroog];
+                // Linkerbeen = newMeshes[0];
+                // Rechterbeen = newMeshes[1];
+                // Body = newMeshes[2];
+                // Linkeroog = newMeshes[3];
+                // Rechteroog = newMeshes[4];
+               
                 console.log(newMeshes);
-                dirk.position = new BABYLON.Vector3(0,1,-4);
-                dirk.scaling = new BABYLON.Vector3(3,33,); 
-                return dirk;
+                const playerRunning = new BABYLON.TransformNode();
+
+                newMeshes.forEach(mesh => {
+                    if (!mesh.parent) {
+                        mesh.parent = playerRunning;
+                    }
+
+                playerRunning.position = new BABYLON.Vector3(0,0,-4);
+                playerRunning.scaling = new BABYLON.Vector3(.5, .5, .5);
+                console.log(playerRunning);
+                });
+
+                // newMeshes[0].scaling = new BABYLON.Vector3(.2,.2,.2);
+                // newMeshes[1].scaling = new BABYLON.Vector3(.2,.2,.2);
+                // newMeshes[2].scaling = new BABYLON.Vector3(.2,.2,.2);
+                // newMeshes[3].scaling = new BABYLON.Vector3(.2,.2,.2);
+                // newMeshes[4].scaling = new BABYLON.Vector3(.2,.2,.2);
+                // newMeshes[5].scaling = new BABYLON.Vector3(.2,.2,.2);
+                // newMeshes[6].scaling = new BABYLON.Vector3(.2,.2,.2);
+                // newMeshes[7].scaling = new BABYLON.Vector3(.2,.2,.2);
+                // newMeshes[8].scaling = new BABYLON.Vector3(.2,.2,.2);
+                // dirk.position = new BABYLON.Vector3(0,1,-4);
+                // dirk.scaling = new BABYLON.Vector3(3,33,); 
             });  
             
             // if (dirk.intersectsMesh(box, false)) {
             //    console.log("boem");
             // }
+
+
+           // Attach camera to canvas inputs
+            scene.activeCamera.attachControl(canvas);
+
+            // Once the scene is loaded, register a render loop
+            engine.runRenderLoop(function() {
+                scene.render();
+            });
 
 
             // ground
