@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AutoSpawning</title>
+    <title>Gameplay + LowFId Player</title>
     <script src="https://cdn.babylonjs.com/babylon.max.js"></script>
     <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
 
@@ -10,18 +10,19 @@
 </head>
 <body>
     <canvas id = "canvas"></canvas>
-    <button id = "fsButton">Gameplay + LowFId Player</button>
+    <button id = "fsButton">fullscreen</button>
     <p id = "demo"></p>
     <script>
         
         const spawnrate1 = 1500;
         const spawnrate2 = 3000;
         const spawnLineZ = 40;
-        let sceneManager;
+        let sceneManager = "start";
         let player;
         let playerBox;
         let box;
 
+        // console.log(sceneManager);
         const randomPosition = (box) => {
             let randomNumberX = Math.random();
             console.log(randomNumberX);
@@ -43,15 +44,14 @@
             }
         }
         
-        const spawnRandomObstacle = (scene) => {
-           
+        const spawnRandomObstacle = (playScene) => {
             //random obstakel selecteren
             let randomNumber = Math.random();
             
 
             if (randomNumber < 0.25) {
-                box = BABYLON.Mesh.CreateBox("Box1", 1.5, 0, scene);
-                const material1 = new BABYLON.StandardMaterial("material1", scene);
+                box = BABYLON.Mesh.CreateBox("Box1", 1.5, 0, playScene);
+                const material1 = new BABYLON.StandardMaterial("material1", playScene);
                 material1.emissiveColor = BABYLON.Color3.Red();
                 randomPosition(box);
                 box.material = material1;
@@ -61,9 +61,9 @@
             } 
             else if (randomNumber <= 0.50) {
 
-                box = BABYLON.Mesh.CreateBox("Box2", 1.5, 0, scene);
+                box = BABYLON.Mesh.CreateBox("Box2", 1.5, 0, playScene);
                 
-                const material2 = new BABYLON.StandardMaterial("material1", scene);
+                const material2 = new BABYLON.StandardMaterial("material1", playScene);
                 material2.emissiveColor = BABYLON.Color3.Blue();
                 box.material = material2;
                 randomPosition(box);
@@ -74,8 +74,8 @@
             }
             else if (randomNumber < 0.75) {
 
-                box = BABYLON.Mesh.CreateBox("Box3", 1, 0, scene);
-                const material3 = new BABYLON.StandardMaterial("material1", scene);
+                box = BABYLON.Mesh.CreateBox("Box3", 1, 0, playScene);
+                const material3 = new BABYLON.StandardMaterial("material1", playScene);
                 material3.emissiveColor = BABYLON.Color3.Green();
                 box.material = material3;
                 randomPosition(box);
@@ -86,8 +86,8 @@
             }
             else if (randomNumber >= 0.75) {
 
-                box = BABYLON.Mesh.CreateBox("Box4", .5, 0, scene);
-                const material4 = new BABYLON.StandardMaterial("material1", scene);
+                box = BABYLON.Mesh.CreateBox("Box4", .5, 0, playScene);
+                const material4 = new BABYLON.StandardMaterial("material1", playScene);
                 material4.emissiveColor = BABYLON.Color3.Yellow();
                 box.material = material4;
                 randomPosition(box);
@@ -116,28 +116,68 @@
             setInterval(spawnRandomObstacle,  spawnrate1);
             setInterval(spawnRandomObstacle,  spawnrate2);
             console.log(spawnrate1, spawnrate2);
-        }
+        };
         
         const checkCollisions = (box, playerBox) => {
-            console.log("test");
             if (box.intersectsMesh(playerBox, false)) {
                console.log("boem");
+               sceneManager = "end";
             }
         }    
         
         const setUp = () => {
+        // sceneManager = "boem";
+
         const canvas = document.getElementById('canvas');
 
         const engine = new BABYLON.Engine(canvas, true);
         
-        const createScene = function () {
-            const scene = new BABYLON.Scene(engine);
-            scene.clearColor = new BABYLON.Color3(0.65, 0.81, 0.67);
+        const createSceneStart = function () {
+            const startScene = new BABYLON.Scene(engine);
+
+            startScene.clearColor = new BABYLON.Color3(0.65, 0.81, 0.67);
+           
+            // Camera
+            // position of the camera
+            var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 5, -10), startScene);
+            camera.setTarget(BABYLON.Vector3.Zero());
+            camera.attachControl(canvas, true);
+
+            // light
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+
+            // box  
+            const cube = BABYLON.MeshBuilder.CreateBox("box", startScene);
+            const boxMaterial = new BABYLON.StandardMaterial("groundMaterial", startScene);
+            boxMaterial.emissiveColor = new BABYLON.Color3(0.99, 0.22, 0.32);
+            cube.material = boxMaterial;
+
+            // ground
+            const ground = BABYLON.MeshBuilder.CreateGround("ground", {height: 150, width: 9, subdivisions: 4});
+            ground.position = new BABYLON.Vector3(0,0,7);
+
+            const groundMaterial = new BABYLON.StandardMaterial("groundMaterial", startScene);
+            groundMaterial.emissiveColor = new BABYLON.Color3(0.85, 0.77, 0.60);
+            ground.material = groundMaterial;
+            
+            const managing = () => {
+                sceneManager = "play";
+                console.log("play");
+            }
+            setTimeout(managing, 5000);
+
+            //keyboard input "w" en "x"
+            return startScene;
+        }
+        const createScenePlay = function () {
+            const playScene = new BABYLON.Scene(engine);
+            playScene.clearColor = new BABYLON.Color3(0.65, 0.81, 0.67);
 
             // Camera
 
             // position of the camera
-            var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 5, -10), scene);
+            var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 5, -10), playScene);
+            
 
             //  where does the camera rotate to? in dit geval richt hij zich naar het middelpunt van de canvas
             camera.setTarget(BABYLON.Vector3.Zero());
@@ -153,9 +193,8 @@
             plugin.animationStartMode = BABYLON.GLTFLoaderAnimationStartMode.ALL;
             });   
 
-            BABYLON.SceneLoader.ImportMesh("","./models/","bodyTest.glb", scene, function(newMeshes){ 
+            BABYLON.SceneLoader.ImportMesh("","./models/","bodyTest.glb", playScene, function(newMeshes){ 
                 playerBox = newMeshes[1];
-                console.log(newMeshes);
                 player = new BABYLON.TransformNode();
 
                 newMeshes.forEach(mesh => {
@@ -164,22 +203,21 @@
                     }
                 player.position = new BABYLON.Vector3(0,0,-4);
                 player.scaling = new BABYLON.Vector3(.5, .5, .5);
-                console.log(player);
-
                 return player;
                 });
+
             });
 
             // ground
             const ground = BABYLON.MeshBuilder.CreateGround("ground", {height: 150, width: 9, subdivisions: 4});
             ground.position = new BABYLON.Vector3(0,0,7);
 
-            const groundMaterial = new BABYLON.StandardMaterial("groundMaterial", scene);
+            const groundMaterial = new BABYLON.StandardMaterial("groundMaterial", playScene);
             groundMaterial.emissiveColor = new BABYLON.Color3(0.85, 0.77, 0.60);
             ground.material = groundMaterial;
 
             //keyboard input "w" en "x"
-            scene.onKeyboardObservable.add((kbInfo) => {
+            playScene.onKeyboardObservable.add((kbInfo) => {
                 switch (kbInfo.type) {
                     case BABYLON.KeyboardEventTypes.KEYDOWN:
                         switch (kbInfo.event.key) {
@@ -195,17 +233,92 @@
                     break;
                 }
             })
+
             spawnRandomObstacles();
-            return scene;
+            
+            return playScene;
         }
 
-        const scene = createScene();
-        engine.runRenderLoop(function () {
-            scene.render();
+        const createSceneEnd = function () {
+            const endScene = new BABYLON.Scene(engine);
 
+            endScene.clearColor = new BABYLON.Color3(0.65, 0.81, 0.67);
+           
+            // Camera
+            // position of the camera
+
+            var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 5, -10), endScene);
+            camera.setTarget(BABYLON.Vector3.Zero());
+            camera.attachControl(canvas, true);
+
+            // light
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+
+            // box  
+            const cube = BABYLON.MeshBuilder.CreateBox("box", endScene);
+            const boxMaterial = new BABYLON.StandardMaterial("groundMaterial", endScene);
+            boxMaterial.emissiveColor = new BABYLON.Color3(0.40, 0.22, 0.82);
+            cube.material = boxMaterial;
+
+            // ground
+            const ground = BABYLON.MeshBuilder.CreateGround("ground", {height: 150, width: 9, subdivisions: 4});
+            ground.position = new BABYLON.Vector3(0,0,7);
+
+            const groundMaterial = new BABYLON.StandardMaterial("groundMaterial", endScene);
+            groundMaterial.emissiveColor = new BABYLON.Color3(0.85, 0.77, 0.60);
+            ground.material = groundMaterial;
+
+
+            const managing = () => {
+                sceneManager = "end";
+                console.log("end");
+            }
+            setTimeout(managing, 10000);
+            //keyboard input "w" en "x"
+            return endScene;
+        }
+
+        const startScene = createSceneStart();
+        const playScene = createScenePlay();
+        const endScene = createSceneEnd();
+
+        engine.runRenderLoop(function () {
+           if (sceneManager == "start") {
+                startScene.render();
+           }
+           else if(sceneManager == "play") {
+                playScene.render();
+           }
+           else if (sceneManager == "end") {
+                endScene.render();
+           }
+
+            // switch (sceneManager) {
+            // case "start":                    
+             
+            //     break
+            // case "play":
+           
+            //     break
+            // case "end":
+            //     endScene.render();
+            //     break
+            // }
+           
+            // if (sceneManager == "start") {
+            //     const startScene = createSceneStart();
+            //     return startScene;
+            //    }
+            //    else if(sceneManager == "play") {
+            //     const playScene = createScenePlay();
+            //     return playScene;
+            //    }
+            //    else if (sceneManager == "end") {
+            //     const endScene = createSceneEnd();
+            //     return endScene;
+            //    }
         });
     }
-    
         var canvasElement = document.getElementById("canvas");
         const fullscreen = () => {
             if (canvasElement.requestFullscreen) { /* other browsers*/
