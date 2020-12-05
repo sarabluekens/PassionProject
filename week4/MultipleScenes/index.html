@@ -278,18 +278,22 @@
             return endScene;
         }
 
-        const startScene = createSceneStart();
-        const playScene = createScenePlay();
-        const endScene = createSceneEnd();
+      
+     
+  
 
         engine.runRenderLoop(function () {
            if (sceneManager == "start") {
+            const startScene = createSceneStart();
                 startScene.render();
            }
            else if(sceneManager == "play") {
+            const playScene = createScenePlay();
+
                 playScene.render();
            }
            else if (sceneManager == "end") {
+            const endScene = createSceneEnd();
                 endScene.render();
            }
 
