@@ -1,0 +1,118 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AutoSpawning</title>
+    <script src="https://cdn.babylonjs.com/babylon.max.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+    <!-- <script src="https://preview.babylonjs.com/gui/babylon.gui.js"></script> -->
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <canvas id = "canvas"></canvas>
+    <button id = "fsButton">Fullscreen</button>
+    <button id = "change"> change Scene</button>
+    <p id = "demo"></p>
+    <script>
+            let boem = false;
+        const setUp = () => {
+            const canvas = document.getElementById('canvas');
+            const engine = new BABYLON.Engine(canvas, true);
+            
+           const createScene0 = function () {
+
+                var scene0 = new BABYLON.Scene(engine);
+
+                                    // position of the camera
+                var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 5, -10), scene0);
+
+                //  where does the camera rotate to? in dit geval richt hij zich naar het middelpunt van de canvas
+                camera.setTarget(BABYLON.Vector3.Zero());
+
+                // Attach the camera to the canvas
+                camera.attachControl(canvas, true);
+
+                // light
+                const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+
+                //ground
+                const ground = BABYLON.MeshBuilder.CreateGround("ground", {height: 150, width: 9, subdivisions: 4});
+                ground.position = new BABYLON.Vector3(0,0,7);
+
+                const groundMaterial = new BABYLON.StandardMaterial("groundMaterial", scene0);
+                groundMaterial.emissiveColor = new BABYLON.Color3(0.85, 0.77, 0.60);
+                ground.material = groundMaterial;
+
+                //Add camera, light and meshes for scene0
+                boxRed = BABYLON.Mesh.CreateBox("Box1", 1.5, 0, scene0);
+                const material1 = new BABYLON.StandardMaterial("material1", scene0);
+                material1.emissiveColor = BABYLON.Color3.Red();
+                boxRed.material = material1;
+
+                setTimeout(() => {
+                    boem = !boem;
+                }, 5000);
+
+                return scene0;
+            };
+
+            const createScene1 = function () {
+                    var scene1 = new BABYLON.Scene(engine);
+
+                                     // position of the camera
+                    var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 5, -10), scene1);
+
+                    //  where does the camera rotate to? in dit geval richt hij zich naar het middelpunt van de canvas
+                    camera.setTarget(BABYLON.Vector3.Zero());
+
+                    // Attach the camera to the canvas
+                    camera.attachControl(canvas, true);
+
+                    // light
+                    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+
+                    //ground
+                    const ground = BABYLON.MeshBuilder.CreateGround("ground", {height: 150, width: 9, subdivisions: 4});
+                    ground.position = new BABYLON.Vector3(0,0,7);
+
+                    const groundMaterial = new BABYLON.StandardMaterial("groundMaterial", scene1);
+                    groundMaterial.emissiveColor = new BABYLON.Color3(0.85, 0.77, 0.60);
+                    ground.material = groundMaterial;
+
+                    boxBlue = BABYLON.Mesh.CreateBox("Box1", 1.5, 0, scene1);
+                    const material1 = new BABYLON.StandardMaterial("material1", scene1);
+                    material1.emissiveColor = BABYLON.Color3.Blue();
+                    boxBlue.material = material1;
+                    //Add camera, light and meshes for scene1
+                    return scene1;
+                };
+            var scene0 = createScene0();
+            var scene1 = createScene1();
+
+
+
+            engine.runRenderLoop(() => {        
+                if(boem === true) {
+                    scene0.render(); 
+                } else {
+                    scene1.render();
+
+                }
+            });
+
+
+            // setInterval(() => {
+            //     boem = !boem;
+            // }, 5000);
+        }
+       
+
+
+        window.addEventListener('DOMContentLoaded', setUp());
+        // document.getElementById("fsButton").addEventListener("click", fullscreen);
+    </script>
+
+</body>
+</html>
+

@@ -21,11 +21,13 @@
         let player;
         let playerBox;
         let box;
+        let start = Date.now();
+        let scene; 
 
-        // console.log(sceneManager);
+        
+
         const randomPosition = (box) => {
             let randomNumberX = Math.random();
-            console.log(randomNumberX);
     
             if (randomNumberX < 0.33 && randomNumberX > 0) {
                 // new BABYLON.Vector3(-3, 0, 40);
@@ -45,7 +47,6 @@
         }
         
         const spawnRandomObstacle = (playScene) => {
-            //random obstakel selecteren
             let randomNumber = Math.random();
             
 
@@ -56,7 +57,6 @@
                 randomPosition(box);
                 box.material = material1;
                 console.log("1");
-                
                 moveForward(box);
             } 
             else if (randomNumber <= 0.50) {
@@ -68,8 +68,6 @@
                 box.material = material2;
                 randomPosition(box);
                 console.log("2");
-
-
                 moveForward(box);
             }
             else if (randomNumber < 0.75) {
@@ -79,9 +77,7 @@
                 material3.emissiveColor = BABYLON.Color3.Green();
                 box.material = material3;
                 randomPosition(box);
-                
                 console.log("3");
-
                 moveForward(box);
             }
             else if (randomNumber >= 0.75) {
@@ -91,11 +87,10 @@
                 material4.emissiveColor = BABYLON.Color3.Yellow();
                 box.material = material4;
                 randomPosition(box);
-
                 console.log("4");
-
                 moveForward(box);
             }
+
             return box;
         }
    
@@ -112,12 +107,12 @@
                 }, 100); 
             };
         
-        const spawnRandomObstacles = ( ) => {
+      
+        const spawnRandomObstacles = ( playScene) => {
             setInterval(spawnRandomObstacle,  spawnrate1);
             setInterval(spawnRandomObstacle,  spawnrate2);
-            console.log(spawnrate1, spawnrate2);
         };
-        
+
         const checkCollisions = (box, playerBox) => {
             if (box.intersectsMesh(playerBox, false)) {
                console.log("boem");
@@ -136,7 +131,7 @@
             const startScene = new BABYLON.Scene(engine);
 
             startScene.clearColor = new BABYLON.Color3(0.65, 0.81, 0.67);
-           
+        
             // Camera
             // position of the camera
             var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 5, -10), startScene);
@@ -159,16 +154,11 @@
             const groundMaterial = new BABYLON.StandardMaterial("groundMaterial", startScene);
             groundMaterial.emissiveColor = new BABYLON.Color3(0.85, 0.77, 0.60);
             ground.material = groundMaterial;
-            
-            const managing = () => {
-                sceneManager = "play";
-                console.log("play");
-            }
-            setTimeout(managing, 5000);
 
             //keyboard input "w" en "x"
             return startScene;
         }
+
         const createScenePlay = function () {
             const playScene = new BABYLON.Scene(engine);
             playScene.clearColor = new BABYLON.Color3(0.65, 0.81, 0.67);
@@ -243,7 +233,7 @@
             const endScene = new BABYLON.Scene(engine);
 
             endScene.clearColor = new BABYLON.Color3(0.65, 0.81, 0.67);
-           
+        
             // Camera
             // position of the camera
 
@@ -267,36 +257,35 @@
             const groundMaterial = new BABYLON.StandardMaterial("groundMaterial", endScene);
             groundMaterial.emissiveColor = new BABYLON.Color3(0.85, 0.77, 0.60);
             ground.material = groundMaterial;
-
-
-            const managing = () => {
-                sceneManager = "end";
-                console.log("end");
-            }
-            setTimeout(managing, 10000);
-            //keyboard input "w" en "x"
+            
+            
             return endScene;
         }
 
-      
+    
      
   
+        // engine.runRenderLoop(function () {
+        //     // setInterval(changeScene(), 100);
 
-        engine.runRenderLoop(function () {
-           if (sceneManager == "start") {
-            const startScene = createSceneStart();
-                startScene.render();
-           }
-           else if(sceneManager == "play") {
-            const playScene = createScenePlay();
+        //    if (sceneManager == "start") {
+        //         const startScene = createSceneStart();
+        //         startScene.render();
+        //    }
+        //    else if(sceneManager == "play") {
+        //         const playScene = createScenePlay();
+        //         playScene.render();
+        //    }
+        //    else if (sceneManager == "end") {
+        //         const endScene = createSceneEnd();
+        //         endScene.render();
+        //    }
 
-                playScene.render();
-           }
-           else if (sceneManager == "end") {
-            const endScene = createSceneEnd();
-                endScene.render();
-           }
-
+     
+        const playScene = createScenePlay();
+        engine.runRenderLoop(function (scene) {
+            playScene.render();
+        });
             // switch (sceneManager) {
             // case "start":                    
              
@@ -309,19 +298,21 @@
             //     break
             // }
            
-            // if (sceneManager == "start") {
-            //     const startScene = createSceneStart();
-            //     return startScene;
-            //    }
-            //    else if(sceneManager == "play") {
-            //     const playScene = createScenePlay();
-            //     return playScene;
-            //    }
-            //    else if (sceneManager == "end") {
-            //     const endScene = createSceneEnd();
-            //     return endScene;
-            //    }
-        });
+            if (sceneManager == "start") {
+                const startScene = createSceneStart();
+                return startScene;
+               }
+               else if(sceneManager == "play") {
+                const playScene = createScenePlay();
+                return playScene;
+               }
+               else if (sceneManager == "end") {
+                const endScene = createSceneEnd();
+                return endScene;
+               }
+           
+
+        // });
     }
         var canvasElement = document.getElementById("canvas");
         const fullscreen = () => {

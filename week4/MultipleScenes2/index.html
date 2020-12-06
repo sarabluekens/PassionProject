@@ -1,0 +1,315 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AutoSpawning</title>
+    <script src="https://cdn.babylonjs.com/babylon.max.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <canvas id = "canvas"></canvas>
+    <button id = "fsButton">Fullscreen</button>
+    <button id = "change"> change Scene</button>
+    <p id = "demo"></p>
+    <script>
+        
+            const spawnrate1 = 1500;
+            const spawnrate2 = 3000;
+            const spawnLineZ = 40;
+
+
+            const randomPosition = (box) => {
+                let randomNumberX = Math.random();
+                // console.log(randomNumberX);
+        
+                if (randomNumberX < 0.33 && randomNumberX > 0) {
+                    // new BABYLON.Vector3(-3, 0, 40);
+                    box.position = new BABYLON.Vector3(-3, 1, 80);
+                    // console.log("baan 1");
+                }
+                else if (randomNumberX >= 0.33 && randomNumberX <= 0.66) { 
+                    // new BABYLON.Vector3(0, 0, 40);
+                    box.position = new BABYLON.Vector3(0, 1, 80);
+                    // console.log("baan 2");
+                }
+                else if (randomNumberX > 0.66 && randomNumberX <= 1) {
+                    // new BABYLON.Vector3(3, 0, 40);
+                    box.position = new BABYLON.Vector3(3, 1, 80);
+                    // console.log("baan 3");
+                }
+            }
+            
+            const spawnRandomObstacle = (scene) => {
+            
+                //random obstakel selecteren
+                let randomNumber = Math.random();
+                let box;
+                
+
+                if (randomNumber < 0.25) {
+                    box = BABYLON.Mesh.CreateBox("Box1", 1.5, 0, scene);
+                    const material1 = new BABYLON.StandardMaterial("material1", scene);
+                    material1.emissiveColor = BABYLON.Color3.Red();
+                    randomPosition(box);
+                    box.material = material1;
+                    // console.log("1");
+                    
+                    moveForward(box);
+                } 
+                else if (randomNumber <= 0.50) {
+
+                    box = BABYLON.Mesh.CreateBox("Box2", 1.5, 0, scene);
+                    
+                    const material2 = new BABYLON.StandardMaterial("material1", scene);
+                    material2.emissiveColor = BABYLON.Color3.Blue();
+                    box.material = material2;
+                    randomPosition(box);
+                    // console.log("2");
+
+
+                    moveForward(box);
+                }
+                else if (randomNumber < 0.75) {
+
+                    box = BABYLON.Mesh.CreateBox("Box3", 1, 0, scene);
+                    const material3 = new BABYLON.StandardMaterial("material1", scene);
+                    material3.emissiveColor = BABYLON.Color3.Green();
+                    box.material = material3;
+                    randomPosition(box);
+                    
+                    // console.log("3");
+
+
+                    moveForward(box);
+                }
+                else if (randomNumber >= 0.75) {
+
+                    box = BABYLON.Mesh.CreateBox("Box4", .5, 0, scene);
+                    const material4 = new BABYLON.StandardMaterial("material1", scene);
+                    material4.emissiveColor = BABYLON.Color3.Yellow();
+                    box.material = material4;
+                    randomPosition(box);
+
+                    // console.log("4");
+
+                    moveForward(box);
+                }
+                return box;
+            }
+    
+            const moveForward = (box) => {
+                    let start = Date.now();
+
+                    let timer = setInterval(function() {
+                        let timePassed = Date.now() - start;
+                        
+                        if (timePassed > 10000) clearInterval(timer);
+                        box.position.z -= 1;
+                        // console.log(timePassed);
+                    }, 100); 
+                };
+            
+            const spawnRandomObstacles = ( ) => {
+                setInterval(spawnRandomObstacle,  spawnrate1);
+                setInterval(spawnRandomObstacle,  spawnrate2);
+            }
+        
+        
+        const setUp = () => {
+        const canvas = document.getElementById('canvas');
+
+        const engine = new BABYLON.Engine(canvas, true);
+        
+        const createStartScene = function () {
+            const scene = new BABYLON.Scene(engine);
+            scene.clearColor = new BABYLON.Color3(0.65, 0.81, 0.67);
+
+            // Camera
+
+            // position of the camera
+            var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 5, -10), scene);
+
+            //  where does the camera rotate to? in dit geval richt hij zich naar het middelpunt van de canvas
+            camera.setTarget(BABYLON.Vector3.Zero());
+
+            // Attach the camera to the canvas
+            camera.attachControl(canvas, true);
+
+            // light
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+
+            // box
+            // const cil = BABYLON.Mesh.CreateCylinder(0,0,0);
+            // cil.position = new BABYLON.Vector3(0,1,0);
+            // cil.scaling = new BABYLON.Vector3(3,3,3);
+
+            // const box = BABYLON.MeshBuilder.CreateBox("box", {}); //unit cube
+            // box.scaling = new BABYLON.Vector3(2, 1.5, 3);
+
+            
+            
+
+
+            //model Dirk toevoegen
+            // const dirk = BABYLON.SceneLoader.Append("models/", "dirkDiri.gltf", scene, function (dirk) {
+            //     dirk.meshes[0].position = new BABYLON.Vector3.Zero();
+            //     dirk.meshes[0].scaling = new BABYLON.Vector3(.2,.2, .2);
+            // });
+            
+
+            //obstakels
+            
+
+            
+            // ground
+            const ground = BABYLON.MeshBuilder.CreateGround("ground", {height: 150, width: 9, subdivisions: 4});
+            ground.position = new BABYLON.Vector3(0,0,7);
+
+            const groundMaterial = new BABYLON.StandardMaterial("groundMaterial", scene);
+            groundMaterial.emissiveColor = new BABYLON.Color3(1, 0, 0);
+            ground.material = groundMaterial;
+
+            //keyboard input "w" en "x"
+            scene.onKeyboardObservable.add((kbInfo) => {
+                switch (kbInfo.type) {
+                    case BABYLON.KeyboardEventTypes.KEYDOWN:
+                        switch (kbInfo.event.key) {
+                            case "w":
+                            case "W" : 
+                                box.position.x -= 3;
+                            break;
+                            case "x":
+                            case "X":
+                                box.position.x += 3;
+                            break;
+                        }
+                    break;
+                }
+            })
+
+
+            return scene;
+        }
+        const createPlayScene = function ()  {
+            const scene2 = new BABYLON.Scene(engine);
+            scene2.clearColor = new BABYLON.Color3(0.65, 0.81, 0.67);
+
+            // Camera
+           
+            // position of the camera
+            var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 5, -10), scene2);
+
+            //  where does the camera rotate to? in dit geval richt hij zich naar het middelpunt van de canvas
+            camera.setTarget(BABYLON.Vector3.Zero());
+
+            // Attach the camera to the canvas
+            camera.attachControl(canvas, true);
+
+            // light
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+            const ground = BABYLON.MeshBuilder.CreateGround("ground", {height: 150, width: 9, subdivisions: 4});
+            ground.position = new BABYLON.Vector3(0,0,7);
+
+            const groundMaterial = new BABYLON.StandardMaterial("groundMaterial", scene2);
+            groundMaterial.emissiveColor = new BABYLON.Color3(0.11, 0.77, 0.60);
+            ground.material = groundMaterial;
+
+
+            spawnRandomObstacles();
+
+            return scene2;
+        }
+        const createEndScene = function () {
+            const scene3 = new BABYLON.Scene(engine);
+            scene3.clearColor = new BABYLON.Color3(0.65, 0.81, 0.67);
+
+            // Camera
+            // position of the camera
+            var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 5, -10), scene3);
+
+            //  where does the camera rotate to? in dit geval richt hij zich naar het middelpunt van de canvas
+            camera.setTarget(BABYLON.Vector3.Zero());
+
+            // Attach the camera to the canvas
+            camera.attachControl(canvas, true);
+
+            // light
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+
+            // ground
+            const ground = BABYLON.MeshBuilder.CreateGround("ground", {height: 150, width: 9, subdivisions: 4});
+            ground.position = new BABYLON.Vector3(0,0,7);
+
+            const groundMaterial = new BABYLON.StandardMaterial("groundMaterial", scene3);
+            groundMaterial.emissiveColor = new BABYLON.Color3(0, 0, 1);
+            ground.material = groundMaterial;
+
+
+            return scene3;
+        } 
+        
+        let number = 1;
+
+        const changeScene = () => {
+            number += 1;
+            console.log(number);
+            return number;
+        }
+        
+        document.getElementById('change').addEventListener("click", changeScene);
+        
+        if (number === 1){
+            const scene = createStartScene();
+            engine.runRenderLoop(function () {
+    
+                scene.render();
+                console.log("Startscene");
+            });
+        }
+
+            
+        else if (number === 2) {
+            const scene2 = createPlayScene();
+            engine.runRenderLoop(function () {
+
+                scene2.render();
+                console.log("Playscene");
+            });
+        }
+        
+        else if (number === 3) {
+          
+            const scene3 = createEndScene();
+            engine.runRenderLoop(function () {
+
+                scene3.render();
+                console.log("Endscene");
+            });
+        }
+    };
+    
+    
+        const canvasElement = document.getElementById("canvas");
+        const fullscreen = () => {
+            if (canvasElement.requestFullscreen) { /* other browsers*/
+                canvasElement.requestFullscreen();
+            } 
+            else if (canvasElement.webkitRequestFullscreen) { /* Safari */
+                canvasElement.webkitRequestFullscreen();
+            } 
+            else if (canvasElement.msRequestFullscreen) { /* IE11 */
+                canvasElement.msRequestFullscreen();
+            }        
+        }
+
+       
+
+        window.addEventListener('DOMContentLoaded', setUp());
+        document.getElementById("fsButton").addEventListener("click", fullscreen);
+    </script>
+
+</body>
+</html>
+

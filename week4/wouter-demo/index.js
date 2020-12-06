@@ -45,3 +45,16 @@ const goToScene = name => {
 
 
 init();
+
+
+
+
+// function something(x)
+// {
+//     if (x >= 10)
+//         // this leaves the function if x is at least 10.
+//         return;
+
+//     // this message displays only if x is less than 10.
+//     alert ("x is less than 10!");
+// }

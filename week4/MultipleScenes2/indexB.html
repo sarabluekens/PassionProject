@@ -138,12 +138,12 @@
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
 
             // box
-            const cil = BABYLON.Mesh.CreateCylinder(0,0,0);
-            cil.position = new BABYLON.Vector3(0,1,0);
-            cil.scaling = new BABYLON.Vector3(3,3,3);
+            // const cil = BABYLON.Mesh.CreateCylinder(0,0,0);
+            // cil.position = new BABYLON.Vector3(0,1,0);
+            // cil.scaling = new BABYLON.Vector3(3,3,3);
 
-            const box = BABYLON.MeshBuilder.CreateBox("box", {}); //unit cube
-            box.scaling = new BABYLON.Vector3(2, 1.5, 3);
+            // const box = BABYLON.MeshBuilder.CreateBox("box", {}); //unit cube
+            // box.scaling = new BABYLON.Vector3(2, 1.5, 3);
 
             
             
@@ -190,6 +190,8 @@
         }
 
         const scene = createScene();
+
+        
         engine.runRenderLoop(function () {
             scene.render();
             
