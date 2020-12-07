@@ -1,4 +1,4 @@
-class GameScene {
+class GameOverScene {
   constructor(engine, goToScene) {
     this.engine = engine;
     this.goToScene = goToScene;
@@ -14,4 +14,4 @@ class GameScene {
   }
 }
 
-export default GameScene;
+export default GameOverScene;
