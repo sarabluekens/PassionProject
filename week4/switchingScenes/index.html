@@ -259,16 +259,16 @@
                     });
                 });
                 
-                // position of the camera
+                //position of the camera
                 var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 5, -10), playScene);
 
-                //  where does the camera rotate to? in dit geval richt hij zich naar het middelpunt van de canvas
+                //where does the camera rotate to? in dit geval richt hij zich naar het middelpunt van de canvas
                 camera.setTarget(BABYLON.Vector3.Zero());
 
-                // Attach the camera to the canvas
+                //Attach the camera to the canvas
                 camera.attachControl(canvas, true);
 
-                // light
+                //light
                 const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
     
                 //ground
@@ -282,15 +282,12 @@
                 
                 //Add camera, light and meshes for scene1
                 console.log("play");
-
-
                 spawnRandomObstacles();
-                
                 return playScene;
-
             }
+            
+            
             var startScene = createStartScene();
-
             setTimeout(() => {
                 playScene = createPlayScene();
                     console.log(boem);
