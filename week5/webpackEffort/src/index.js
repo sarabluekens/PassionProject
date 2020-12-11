@@ -2,6 +2,8 @@ import StartScene from './classes/StartScene.js';
 import GameScene from './classes/GameScene.js';
 import GameOverScene from './classes/GameOverScene.js';
 import * as BABYLON from 'babylonjs';
+import 'babylonjs-loaders';
+
 import './css/style.css';
 
 

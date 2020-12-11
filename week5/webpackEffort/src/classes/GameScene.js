@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import 'babylonjs-loaders';
 
 class GameScene {
   constructor(engine, goToScene) {
@@ -119,28 +120,26 @@ class GameScene {
     };
 
   start () {
-    let box;
 
     const playScene = new BABYLON.Scene(this.engine);
     playScene.clearColor = new BABYLON.Color3(0.65, 0.81, 0.67);
 
     let playerBox;
-    BABYLON.SceneLoader.OnPluginActivatedObservable.addOnce(function (plugin) {
-      plugin.animationStartMode = BABYLON.GLTFLoaderAnimationStartMode.ALL;
-    });
+  //   BABYLON.SceneLoader.OnPluginActivatedObservable.add(function (loader) {
+  //         loader.animationStartMode = BABYLON.GLTFLoaderAnimationStartMode.ALL;
+  // });
 
-    BABYLON.SceneLoader.ImportMesh("","./models/","bodyTest.glb", playScene, function(newMeshes){
-        playerBox = newMeshes[1];
-        player = new BABYLON.TransformNode();
-        newMeshes.forEach(mesh => {
-            if (!mesh.parent) {
-                mesh.parent = player;
-            }
-            player.position = new BABYLON.Vector3(0,0,-4);
-            player.scaling = new BABYLON.Vector3(.5, .5, .5);
-        });
+    BABYLON.SceneLoader.ImportMesh("","./assets/models/","speakers.gltf", playScene, function(newMeshes){
+      playerBox = newMeshes[1];
+      player = new BABYLON.TransformNode();
+      newMeshes.forEach(mesh => {
+          if (!mesh.parent) {
+              mesh.parent = player;
+          }
+          player.position = new BABYLON.Vector3(0,0,-4);
+          player.scaling = new BABYLON.Vector3(.5, .5, .5);
+      });
     });
-
     // position of the camera
     var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 5, -10), playScene);
 
@@ -164,8 +163,7 @@ class GameScene {
 
     //Add camera, light and meshes for scene1
     console.log("play");
-
-    spawnRandomObstacles(box, playerBox);
+    this.spawnRandomObstacles();
   }
 
   stop() {

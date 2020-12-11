@@ -1,4 +1,6 @@
 import * as BABYLON from 'babylonjs';
+import 'babylonjs-loaders';
+
 
 class GameOverScene {
   constructor(engine, goToScene) {

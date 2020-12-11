@@ -1,4 +1,6 @@
 import * as BABYLON from 'babylonjs';
+import 'babylonjs-loaders';
+
 class StartScene {
   constructor(engine, goToScene) {
     this.engine = engine;
@@ -16,7 +18,6 @@ class StartScene {
 
   sceneSetup() {
     const startScene = new BABYLON.Scene(this.engine);
-
 
     // position of the camera
     var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 5, -10), startScene);
