@@ -1,7 +1,7 @@
 import StartScene from './classes/StartScene.js';
 import GameScene from './classes/GameScene.js';
 import GameOverScene from './classes/GameOverScene.js';
-import {Engine, Scene} from './node_modules/babylonjs/babylon.max.js';
+import * as BABYLON from './node_modules/babylonjs/babylon.js';
 
 
 let startScene;

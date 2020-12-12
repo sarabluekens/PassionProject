@@ -1,4 +1,5 @@
-
+import * as BABYLON from '@babylonjs/core';
+import "@babylonjs/loaders/glTF";
 class StartScene {
   constructor(engine, goToScene) {
     this.engine = engine;

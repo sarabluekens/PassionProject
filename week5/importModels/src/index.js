@@ -3,6 +3,8 @@ import GameScene from './classes/GameScene.js';
 import GameOverScene from './classes/GameOverScene.js';
 
 import {Engine} from '@babylonjs/core/Engines/engine';
+import * as BABYLON from '@babylonjs/core';
+
 import "@babylonjs/loaders/glTF";
 import './css/style.css';
 

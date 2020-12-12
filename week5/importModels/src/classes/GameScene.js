@@ -1,5 +1,4 @@
-import * as BABYLON from 'babylonjs';
-import 'babylonjs-loaders';
+import * as BABYLON from '@babylonjs/core';
 import "@babylonjs/loaders/glTF";
 
 class GameScene {
@@ -114,8 +113,8 @@ class GameScene {
       let spawnRate1 = 3000;
       let spawnRate2 = 1400;
 
-      this.obstacle1 = setInterval(() => {this.spawnRandomObstacle()},  spawnRate1);
-      this.obstacle2 = setInterval(() => {this.spawnRandomObstacle()},  spawnRate2);
+    const obstacle1 = setInterval(() => {this.spawnRandomObstacle()},  spawnRate1);
+    const obstacle2 = setInterval(() => {this.spawnRandomObstacle()},  spawnRate2);
 
   };
 
@@ -164,8 +163,8 @@ class GameScene {
 
   stop() {
     console.log("dit werkt");
-    clearInterval(this.obstacle1);
-    clearInterval(this.obstacle2);
+    clearInterval(obstacle1);
+    clearInterval(obstacle2);
     this.engine.stopRenderLoop(
     );
   };
