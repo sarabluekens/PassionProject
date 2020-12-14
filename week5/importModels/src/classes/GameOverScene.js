@@ -6,8 +6,6 @@ class GameOverScene {
     this.goToScene = goToScene;
   }
 
-
-
   sceneSetup() {
     const gameOverScene = new BABYLON.Scene(this.engine);
 
@@ -53,9 +51,6 @@ class GameOverScene {
     // });
   }
 
-
-
 }
 
 export default GameOverScene;
-

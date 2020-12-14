@@ -152,16 +152,16 @@ class GameScene {
 
       };
   }
-  checkCollisions (object){
-    console.log("test");
+  // checkCollisions (object){
+  //   console.log("test");
 
-    const object = this.spawnRandomObstacle();
-    const player = this.player();
-    if (player.intersectsMesh(object, false)) {
-        // boem = true;
-        console.log("boem");
-    }
-  };
+  //   const object = this.spawnRandomObstacle();
+  //   const player = this.player();
+  //   if (player.intersectsMesh(object, false)) {
+  //       // boem = true;
+  //       console.log("boem");
+  //   }
+  // };
 
   player () {
     const gameScene = this.gameScene;

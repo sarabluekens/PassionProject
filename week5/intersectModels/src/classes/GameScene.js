@@ -1,6 +1,5 @@
 import * as BABYLON from '@babylonjs/core';
 import "@babylonjs/loaders/glTF";
-import { PlaneDragGizmo } from 'babylonjs';
 
 class GameScene {
   constructor(engine, goToScene) {
@@ -143,11 +142,11 @@ class GameScene {
 
           let timePassed = Date.now() - start;
           if (timePassed > 10000) clearInterval(timer);
-          box.position.z -= 1;
+          box.position.z -= 0.1;
           if(timePassed >= 10000){
            box.dispose();
           }
-        }, 100);
+        }, 10);
       };
 
   }
@@ -176,7 +175,7 @@ class GameScene {
       });
       return ;
     });
-    this.checkCollisions(this.obstacleBox, this.playerBox);
+    // this.checkCollisions(this.obstacleBox, this.playerBox);
 
   };
 

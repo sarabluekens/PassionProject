@@ -9,9 +9,9 @@ class StartScene {
 
   start() {
     this.render();
-    // setTimeout(() => {
-    //   this.goToScene('game');
-    // }, 5000);
+    setTimeout(() => {
+      this.goToScene('introFilmpje');
+    }, 5000);
 
   }
 
