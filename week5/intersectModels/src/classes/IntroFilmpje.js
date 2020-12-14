@@ -5,8 +5,8 @@ class IntroFilmpje {
   constructor(goToScene) {
 
     this.goToScene = goToScene;
-  }
 
+  }
   speelFilmpje () {
     const canvas = document.getElementById('canvas');
     canvas.classList.add("hidden");
