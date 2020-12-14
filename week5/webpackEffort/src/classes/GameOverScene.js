@@ -7,9 +7,6 @@ class GameOverScene {
     this.engine = engine;
     this.goToScene = goToScene;
   }
-
-
-
   sceneSetup() {
     const gameOverScene = new BABYLON.Scene(this.engine);
 
