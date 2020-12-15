@@ -1,8 +1,7 @@
 import "@babylonjs/loaders/glTF";
 
-class IntroFilmpje {
+class TutorialFilmpje {
   constructor(goToScene) {
-
     this.goToScene = goToScene;
 
   }
@@ -39,7 +38,7 @@ class IntroFilmpje {
 
    setTimeout(() => {
      this.deleteFilmpje();
-      this.goToScene("game");
+      this.goToScene("tutorial");
 
       console.log("shoot");
     }, 5000)
@@ -48,9 +47,7 @@ class IntroFilmpje {
   stop() {
     console.log("dit werkt");
   };
-
-
 }
 
-export default IntroFilmpje;
+export default TutorialFilmpje;
 

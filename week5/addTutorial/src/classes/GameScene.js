@@ -1,5 +1,6 @@
 
 import * as BABYLON from '@babylonjs/core';
+import { Scene } from '@babylonjs/core';
 import "@babylonjs/loaders/glTF";
 
 class GameScene {
@@ -7,26 +8,23 @@ class GameScene {
     this.engine = engine;
     this.goToScene = goToScene;
     this.box = null;
-
     this.object = null;
-    this.obstacleBox = null;
-    this.playerBox = null;
-
+    let obstacleBox;
+    // this.playerBox = null;
   }
 
   spawnRandomObstacle () {
-
     let randomNumber = Math.random();
 
     if (randomNumber < 0.25) {
-      // this.box =  BABYLON.SceneLoader.ImportMeshAsync("", "./src/assets/models/", "speakers.glb", this.gameScene).newMeshes[1];
+      // this.box =  BABYLON.SceneLoader.ImportMeshAsync("", "./src/assets/models/", "speakers.glb", this.gameScene).playerMeshes[1];
 
         const gameScene = this.gameScene;
-        const obstacle = new BABYLON.SceneLoader.ImportMesh("", "./src/assets/models/", "speakers.gltf", gameScene, newMeshes =>{
-          // this.obstacleBox = newMeshes[1];
+        const obstacle = new BABYLON.SceneLoader.ImportMesh("", "./src/assets/models/", "speakers.gltf", gameScene, objectMeshes =>{
+          obstacleBox = objectMeshes[1];
           const box = new BABYLON.TransformNode();
-          // this.boxes.playerBox = newMeshes[1];
-          newMeshes.forEach(mesh => {
+          // this.boxes.playerBox = objectMeshes[1];
+          objectMeshes.forEach(mesh => {
             if(!mesh.parent) {
               mesh.parent = box;
             }
@@ -47,10 +45,10 @@ class GameScene {
     else if (randomNumber <= 0.50) {
 
        const gameScene = this.gameScene;
-        new BABYLON.SceneLoader.ImportMesh("", "./src/assets/models/", "speakers.gltf", gameScene, newMeshes =>{
-          // this.obstacleBox = newMeshes[1];
+        new BABYLON.SceneLoader.ImportMesh("", "./src/assets/models/", "speakers.gltf", gameScene, objectMeshes =>{
+          obstacle = objectMeshes[1];
           const box = new BABYLON.TransformNode();
-          newMeshes.forEach(mesh => {
+          objectMeshes.forEach(mesh => {
             if(!mesh.parent) {
               mesh.parent = box;
             }
@@ -72,10 +70,10 @@ class GameScene {
 
     else if (randomNumber < 0.75) {
       const gameScene = this.gameScene;
-      new BABYLON.SceneLoader.ImportMesh("", "./src/assets/models/", "speakers.gltf", gameScene,  newMeshes =>{
-        this.obstacleBox = newMeshes[1];
+      new BABYLON.SceneLoader.ImportMesh("", "./src/assets/models/", "speakers.gltf", gameScene,  objectMeshes =>{
+          obstacleBox = objectMeshes[1];
         const box = new BABYLON.TransformNode();
-        newMeshes.forEach(mesh => {
+        objectMeshes.forEach(mesh => {
           if(!mesh.parent) {
             mesh.parent = box;
           }
@@ -95,13 +93,13 @@ class GameScene {
 
     }
     else if (randomNumber >= 0.75) {
-
+      let obstacleBox;
       const gameScene = this.gameScene;
-      new BABYLON.SceneLoader.ImportMesh("", "./src/assets/models/", "speakers.gltf", gameScene, newMeshes =>{
+      new BABYLON.SceneLoader.ImportMesh("", "./src/assets/models/", "speakers.gltf", gameScene, objectMeshes =>{
 
-        // this.obstacleBox = newMeshes[1];
+        obstacleBox = objectMeshes[1];
         const box = new BABYLON.TransformNode();
-        newMeshes.forEach(mesh => {
+        objectMeshes.forEach(mesh => {
           if(!mesh.parent) {
             mesh.parent = box;
           }
@@ -112,9 +110,10 @@ class GameScene {
         randomPosition(box);
         moveForward(box);
         // checkCollisions(box);
-      });
 
-      return ;
+        return obstacleBox;
+      });
+      return obstacleBox;
     }
 
     function randomPosition(box) {
@@ -162,34 +161,38 @@ class GameScene {
 
   player () {
     const gameScene = this.gameScene;
-    new BABYLON.SceneLoader.ImportMesh("", "./src/assets/models/", "speakers.glb", gameScene,  newMeshes =>{
-      this.obstacleBox = newMeshes[1];
-      const player = new BABYLON.TransformNode();
-      newMeshes.forEach(mesh => {
-        if(!mesh.parent) {
-          mesh.parent = player;
-        }
+    let playerBox;
+    const model = new BABYLON.SceneLoader.ImportMesh("", "./src/assets/models/", "speakers.glb", gameScene, playerMeshes => {
+      playerBox = playerMeshes[1];
+      let player = new BABYLON.TransformNode();
+        playerMeshes.forEach(mesh => {
+          if(!mesh.parent) {
+            mesh.parent = player;
+          }
 
         player.position = new BABYLON.Vector3(0,0,-4);
         player.scaling = new BABYLON.Vector3(.5,.5,.5);
         player.rotation = new BABYLON.Vector3 (0, 1.5, 0);
-      });
-      return ;
-    });
-    // this.checkCollisions(this.obstacleBox, this.playerBox);
 
+
+      });
+      return playerBox;
+    });
+    return playerBox;
   };
 
-  checkCollisions(box, player) {
+  checkCollisions() {
+    this.player();
     console.log(box);
     console.log("test");
-    if (box.intersectsMesh(player, false)) {
+    if (this.player().intersectsMesh(this.spawnRandomObstacle(), false)) {
         console.log("boem");
         boem = false;
     }
 }
   sceneSetup () {
     const gameScene =  new BABYLON.Scene(this.engine);
+    gameScene.collisionsEnabled = true;
     gameScene.clearColor = new BABYLON.Color3(1, 0.4, 0.4);
     // position of the camera
     var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 5, -10), gameScene);
@@ -234,7 +237,6 @@ class GameScene {
     const gameScene = this.sceneSetup();
     this.engine.runRenderLoop(() => {
       gameScene.render();
-      // this.checkCollisions();
 
     });
 

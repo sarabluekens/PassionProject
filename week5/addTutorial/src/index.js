@@ -1,7 +1,9 @@
 import StartScene from './classes/StartScene.js';
 import GameScene from './classes/GameScene.js';
 import GameOverScene from './classes/GameOverScene.js';
+import Tutorial from './classes/Tutorial.js';
 import IntroFilmpje from './classes/IntroFilmpje.js';
+import TutorialFilmpje from './classes/TutorialFilmpje.js';
 import {Engine} from '@babylonjs/core/Engines/engine';
 import * as BABYLON from '@babylonjs/core';
 
@@ -13,26 +15,22 @@ let startScene;
 let gameScene;
 let gameOverScene;
 let introFilmpje;
+let tutorialFilmpje
 let currentScene;
+let tutorial;
 let engine;
 let canvas;
 
 const init = () => {
   canvas = document.getElementById('canvas');
   engine = new BABYLON.Engine(canvas, true);
-
   startScene = new StartScene(engine, goToScene);
-  introFilmpje = new IntroFilmpje (goToScene);
+
   gameScene = new GameScene(engine, goToScene);
   gameOverScene = new GameOverScene(engine, goToScene);
+  tutorial = new Tutorial(engine,goToScene);
 
-  goToScene('start');
-
-
-  //   currentScene.render();
-  // });
-
-
+  goToScene('game');
 };
 
 const goToScene = name => {
@@ -44,6 +42,12 @@ const goToScene = name => {
   }
   else if ( name === "introFilmpje") {
     currentScene = introFilmpje;
+  }
+  else if ( name === "tutorial") {
+    currentScene = tutorial;
+  }
+  else if ( name === "tutorialFilmpje"){
+    currentScene = tutorialFilmpje;
   }
   else if (name === 'game') {
     currentScene = gameScene;
